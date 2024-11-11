@@ -17,6 +17,40 @@ Add the following dependency in your `pubspec.yaml` file:
 dependencies:
   flutter_media_picker_get: ^1.0.0
 ```
+## Android Permissions
+```yaml
+<uses-feature
+    android:name="android.hardware.camera"
+    android:required="false" />
+
+<uses-permission
+    android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+    android:maxSdkVersion="29"
+    tools:replace="android:maxSdkVersion" />
+<uses-permission android:name="android.permission.INTERNET" />
+<uses-permission
+    android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+    android:maxSdkVersion="29" />
+    
+<uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+<uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
+<uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
+<uses-permission android:name="android.permission.CAMERA" />
+```
+## iOS Permissions
+
+- Open Info.plist in your Flutter project, located at ios/Runner/Info.plist.
+- Add the following keys for camera and photo library access. These keys provide descriptions that explain to users why your app requires these permissions:
+```yaml
+<key>NSCameraUsageDescription</key>
+<string>We need access to your camera to allow you to capture photos and videos.</string>
+
+<key>NSPhotoLibraryUsageDescription</key>
+<string>We need access to your photo library to allow you to select photos and videos.</string>
+
+<key>NSPhotoLibraryAddUsageDescription</key>
+<string>We need permission to save photos and videos to your photo library.</string>
+```
 
 ## Usage
 
