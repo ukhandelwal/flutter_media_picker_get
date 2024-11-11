@@ -40,4 +40,3 @@ class CameraControllerX extends GetxController {
     super.onClose();
   }
 }
-

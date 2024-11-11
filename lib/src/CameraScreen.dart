@@ -11,11 +11,13 @@ class CameraScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final CameraControllerX controller = Get.put(CameraControllerX(),permanent: false);
+    final CameraControllerX controller =
+        Get.put(CameraControllerX(), permanent: false);
 
     return Scaffold(
       appBar: AppBar(title: const Text('Camera with Zoom')),
-      body: Obx(() => controller.initializeControllerFuture.value == null
+      body: Obx(
+        () => controller.initializeControllerFuture.value == null
             ? const CircularProgressIndicator()
             : FutureBuilder<void>(
                 future: controller.initializeControllerFuture.value,

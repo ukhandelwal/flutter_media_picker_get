@@ -1,7 +1,8 @@
 name: flutter_media_picker_getx
-description: "A new Flutter package project."
+description: "A Flutter package that provides a customizable and easy-to-use media picker, allowing users to select multiple images or videos with support for camera integration."
 version: 0.0.1
 homepage:
+author: Udit khandelwal
 
 environment:
   sdk: '>=3.4.4 <4.0.0'
@@ -21,6 +22,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^3.0.0
+  mockito: ^5.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
