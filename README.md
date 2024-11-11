@@ -1,39 +1,105 @@
-<!--
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
+# Flutter Media Picker Get
 
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/guides/libraries/writing-package-pages).
-
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-library-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/developing-packages).
--->
-
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+A Flutter package that provides a customizable and easy-to-use media picker, allowing users to select multiple images or videos with support for camera integration.
 
 ## Features
 
-TODO: List what your package can do. Maybe include images, gifs, or videos.
+- Multi-media selection (Images and Videos)
+- Single or multiple selection support
+- Camera integration
+- Customizable media count limit
 
-## Getting started
+## Installation
 
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
+Add the following dependency in your `pubspec.yaml` file:
+
+```yaml
+dependencies:
+  flutter_media_picker_get: ^1.0.0
+```
 
 ## Usage
 
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder.
-
-```dart
-const like = 'sample';
+To use the media picker, follow these steps:
+- Import the package
+```yaml
+  import 'package:flutter_media_picker_get/flutter_media_picker_get.dart';
+```
+- Use the InstagramPicker widget to open the media picker
+```yaml
+ElevatedButton(
+  onPressed: () {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => InstagramPicker(
+          mediaCount: 10,
+          selection: SelectionEnum.MultiMedia,
+          multiSelection: true,
+          cameraEnable: true,
+          onPressedConfirm: myCallback,
+        ),
+      ),
+    );
+  },
+  child: Text("Picker"),
+);
 ```
 
-## Additional information
+##Parameters
 
-TODO: Tell users more about the package: where to find more information, how to
-contribute to the package, how to file issues, what response they can expect
-from the package authors, and more.
+- mediaCount: Maximum number of items that can be selected.
+- selection: Selection type. Use SelectionEnum.MultiMedia for images and videos.
+- multiSelection: Boolean to allow multiple media selection.
+- cameraEnable: Boolean to enable camera access within the picker.
+- onPressedConfirm: Callback function triggered when the user confirms selection.
+
+##Example
+```yaml
+import 'package:flutter/material.dart';
+import 'package:flutter_media_picker_get/flutter_media_picker_get.dart';
+
+void main() => runApp(MyApp());
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: HomeScreen(),
+    );
+  }
+}
+
+class HomeScreen extends StatelessWidget {
+  void myCallback(List<String> selectedMedia) {
+    // Handle selected media files here
+    print("Selected Media: $selectedMedia");
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text("Media Picker Example")),
+      body: Center(
+        child: ElevatedButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => InstagramPicker(
+                  mediaCount: 10,
+                  selection: SelectionEnum.MultiMedia,
+                  multiSelection: true,
+                  cameraEnable: true,
+                  onPressedConfirm: myCallback,
+                ),
+              ),
+            );
+          },
+          child: Text("Open Media Picker"),
+        ),
+      ),
+    );
+  }
+}
+```
