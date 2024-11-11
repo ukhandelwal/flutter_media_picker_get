@@ -46,7 +46,7 @@ ElevatedButton(
 );
 ```
 
-##Parameters
+## Parameters
 
 - mediaCount: Maximum number of items that can be selected.
 - selection: Selection type. Use SelectionEnum.MultiMedia for images and videos.
@@ -54,7 +54,7 @@ ElevatedButton(
 - cameraEnable: Boolean to enable camera access within the picker.
 - onPressedConfirm: Callback function triggered when the user confirms selection.
 
-##Example
+## Example
 ```yaml
 import 'package:flutter/material.dart';
 import 'package:flutter_media_picker_get/flutter_media_picker_get.dart';
