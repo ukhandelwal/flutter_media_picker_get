@@ -7,17 +7,17 @@ import 'package:photo_manager/photo_manager.dart';
 import 'package:video_player/video_player.dart';
 
 import 'SelectionEnum.dart';
-import 'controller/InstaController.dart';
+import 'controller/MediaController.dart';
 import 'model/MediaItem.dart';
 
-class InstagramPicker extends StatelessWidget {
+class MediaPicker extends StatelessWidget {
   final int mediaCount;
   final bool cameraEnable;
   final bool multiSelection;
   final SelectionEnum selection;
   final VoidCallback onPressedConfirm;
 
-  const InstagramPicker(
+  const MediaPicker(
       {super.key,
       this.mediaCount = 10,
       this.cameraEnable = false,
@@ -27,8 +27,8 @@ class InstagramPicker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final InstaController instaController =
-        Get.put(InstaController(), permanent: false);
+    final MediaController instaController =
+        Get.put(MediaController(), permanent: false);
 
     return Scaffold(
       backgroundColor: Colors.black,

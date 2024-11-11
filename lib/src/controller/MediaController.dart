@@ -7,7 +7,7 @@ import 'package:video_player/video_player.dart';
 
 import '../model/MediaItem.dart';
 
-class InstaController extends GetxController {
+class MediaController extends GetxController {
   Rx<ScrollController> scrollController = ScrollController().obs;
   RxString mediaType = "images".obs;
   RxList<MediaItem> mediaList = <MediaItem>[].obs;

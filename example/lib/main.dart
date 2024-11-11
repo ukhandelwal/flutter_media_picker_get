@@ -73,7 +73,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => InstagramPicker(
+                        builder: (context) => MediaPicker(
                               mediaCount: 10,
                               selection: SelectionEnum.MultiMedia,
                               multiSelection: true,
