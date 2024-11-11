@@ -4,3 +4,7 @@
 *  Single or multiple selection support
 *  Camera integration
 *  Customizable media count limit
+
+## 0.0.2
+
+*  Update Readme file
