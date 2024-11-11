@@ -1,6 +1,6 @@
 name: flutter_media_picker_getx
 description: "A Flutter package that provides a customizable and easy-to-use media picker, allowing users to select multiple images or videos with support for camera integration."
-version: 0.0.3
+version: 0.0.4
 repository: https://github.com/ukhandelwal/flutter_media_picker_get
 
 environment:

@@ -59,14 +59,14 @@ To use the media picker, follow these steps:
 ```yaml
   import 'package:flutter_media_picker_get/flutter_media_picker_get.dart';
 ```
-- Use the InstagramPicker widget to open the media picker
+- Use the MediaPicker widget to open the media picker
 ```yaml
 ElevatedButton(
   onPressed: () {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => InstagramPicker(
+        builder: (context) => MediaPicker(
           mediaCount: 10,
           selection: SelectionEnum.MultiMedia,
           multiSelection: true,
@@ -120,7 +120,7 @@ class HomeScreen extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => InstagramPicker(
+                builder: (context) => MediaPicker(
                   mediaCount: 10,
                   selection: SelectionEnum.MultiMedia,
                   multiSelection: true,
