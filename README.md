@@ -15,7 +15,7 @@ Add the following dependency in your `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  flutter_media_picker_get: ^0.0.5
+  flutter_media_picker_get: ^0.0.6
 ```
 ## Android Permissions
 ```yaml
@@ -105,9 +105,26 @@ class MyApp extends StatelessWidget {
 }
 
 class HomeScreen extends StatelessWidget {
-  void myCallback(List<String> selectedMedia) {
-    // Handle selected media files here
-    print("Selected Media: $selectedMedia");
+  Future<void> myCallback({required dynamic value}) async {
+    if (value is List<MediaItem>) {
+      for (var media in value) {
+        if (media.type == MediaType.image) {
+          final file = await media.assetEntity.file;
+          if (file != null) {
+            if (kDebugMode) {
+              print("file $file");
+            }
+          }
+        }
+      }
+    } else {
+      if (value is MediaItem) {
+        final file = await value.assetEntity.file;
+        if (kDebugMode) {
+          print("file $file");
+        }
+      }
+    }
   }
 
   @override
