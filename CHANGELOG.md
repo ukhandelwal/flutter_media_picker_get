@@ -22,3 +22,7 @@
 ## 0.0.5
 
 *  Update Readme file
+
+## 0.0.6
+
+*  Update file get code

@@ -1,12 +1,12 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_media_picker_getx/src/CameraScreen.dart';
+import 'package:flutter_media_picker_getx/src/camera_screen.dart';
 import 'package:get/get.dart';
 import 'package:photo_manager/photo_manager.dart';
 import 'package:video_player/video_player.dart';
 
-import 'SelectionEnum.dart';
+import 'selection_enum.dart';
 import 'controller/MediaController.dart';
 import 'model/MediaItem.dart';
 
@@ -15,7 +15,7 @@ class MediaPicker extends StatelessWidget {
   final bool cameraEnable;
   final bool multiSelection;
   final SelectionEnum selection;
-  final VoidCallback onPressedConfirm;
+  final void Function({required dynamic value}) onPressedConfirm;
 
   const MediaPicker(
       {super.key,
@@ -171,7 +171,15 @@ class MediaPicker extends StatelessWidget {
                     () => Visibility(
                       visible: instaController.selectedMedia.value != null,
                       child: GestureDetector(
-                        onTap: onPressedConfirm,
+                        onTap: () {
+                          if (instaController.selectedMediaArray.isNotEmpty) {
+                            onPressedConfirm(
+                                value: instaController.selectedMediaArray);
+                          } else {
+                            onPressedConfirm(
+                                value: instaController.selectedMedia.value);
+                          }
+                        },
                         child: Container(
                           margin: const EdgeInsets.only(left: 12),
                           decoration: BoxDecoration(

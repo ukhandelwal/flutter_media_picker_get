@@ -100,7 +100,6 @@ class MediaController extends GetxController {
     mediaList.refresh();
     selectedMediaArray.refresh();
     selectedMedia.refresh();
-    // update();
   }
 
   Future<void> _playVideo(AssetEntity asset) async {
