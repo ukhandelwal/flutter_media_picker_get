@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 
-import 'controller/CameraControllerX.dart';
+import 'controller/camera_controllerX.dart';
 
 class CameraScreen extends StatelessWidget {
   const CameraScreen({super.key});

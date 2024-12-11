@@ -36,6 +36,15 @@ dependencies:
 <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
 <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
 <uses-permission android:name="android.permission.CAMERA" />
+
+<application
+android:name="${applicationName}"
+android:icon="@mipmap/ic_launcher"
+android:enableOnBackInvokedCallback="true"
+android:label="example"
+android:requestLegacyExternalStorage="true"
+android:usesCleartextTraffic="true">
+/>
 ```
 ## iOS Permissions
 

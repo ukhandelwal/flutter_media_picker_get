@@ -7,8 +7,8 @@ import 'package:photo_manager/photo_manager.dart';
 import 'package:video_player/video_player.dart';
 
 import 'selection_enum.dart';
-import 'controller/MediaController.dart';
-import 'model/MediaItem.dart';
+import 'controller/media_controller.dart';
+import 'model/media_item.dart';
 
 class MediaPicker extends StatelessWidget {
   final int mediaCount;
@@ -115,6 +115,7 @@ class MediaPicker extends StatelessWidget {
                         onChanged: (String? newValue) {
                           if (newValue != null) {
                             instaController.mediaType.value = newValue;
+                            instaController.resetPagination();
                             instaController.filterData();
                           }
                         },

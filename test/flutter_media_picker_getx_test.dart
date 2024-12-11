@@ -1,5 +1,5 @@
 import 'dart:typed_data';
-import 'package:flutter_media_picker_getx/src/model/MediaItem.dart';
+import 'package:flutter_media_picker_getx/src/model/media_item.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:photo_manager/photo_manager.dart';

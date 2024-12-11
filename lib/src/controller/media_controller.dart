@@ -5,7 +5,7 @@ import 'package:photo_manager/photo_manager.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:video_player/video_player.dart';
 
-import '../model/MediaItem.dart';
+import '../model/media_item.dart';
 
 class MediaController extends GetxController {
   Rx<ScrollController> scrollController = ScrollController().obs;
@@ -16,7 +16,7 @@ class MediaController extends GetxController {
   int currentPage = 0;
   bool hasMore = true;
   RxBool multiSelect = false.obs;
-  final int pageSize = 2000;
+  final int pageSize = 50;
   RxList<MediaItem> selectedMediaArray = <MediaItem>[].obs;
   Rxn<MediaItem> selectedMedia = Rxn<MediaItem>();
   VideoPlayerController? videoController;
@@ -156,4 +156,6 @@ class MediaController extends GetxController {
       multiSelect.value = true;
     }
   }
+
+  void resetPagination() {}
 }
