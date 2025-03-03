@@ -1,16 +1,15 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_media_picker_getx/src/camera_screen.dart';
+import 'package:flutter_media_picker_getx/src/view/camera_screen.dart';
 import 'package:get/get.dart';
 import 'package:photo_manager/photo_manager.dart';
 import 'package:video_player/video_player.dart';
 
-import 'selection_enum.dart';
-import 'controller/media_controller.dart';
-import 'model/media_item.dart';
+import '../../flutter_media_picker_getx.dart';
+import '../controller/media_controller.dart';
 
-class MediaPicker extends StatelessWidget {
+class MediaPicker extends StatefulWidget {
   final int mediaCount;
   final bool cameraEnable;
   final bool multiSelection;
@@ -26,20 +25,33 @@ class MediaPicker extends StatelessWidget {
       required this.onPressedConfirm});
 
   @override
-  Widget build(BuildContext context) {
-    final MediaController instaController =
-        Get.put(MediaController(), permanent: false);
+  State<MediaPicker> createState() => _MediaPickerState();
+}
 
+class _MediaPickerState extends State<MediaPicker> {
+  final MediaController controller =
+      Get.put(MediaController(), permanent: false);
+
+  @override
+  void dispose() {
+    controller.dispose();
+    controller.videoController?.dispose();
+    controller.scrollController.value.dispose();();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      appBar: AppBar(title: Text('${selection.name} Picker'), actions: [
+      appBar: AppBar(title: Text('${widget.selection.name} Picker'), actions: [
         Obx(
           () => Visibility(
-            visible: instaController.multiSelect.value,
+            visible: controller.multiSelect.value,
             child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: Text(
-                  '${instaController.selectedMediaArray.length}/$mediaCount',
+                  '${controller.selectedMediaArray.length}/${widget.mediaCount}',
                   style: const TextStyle(fontSize: 16),
                 )),
           ),
@@ -52,7 +64,7 @@ class MediaPicker extends StatelessWidget {
               aspectRatio: 4 / 3,
               child: Obx(() {
                 final selectedMedia =
-                    instaController.selectedMedia.value?.assetEntity;
+                    controller.selectedMedia.value?.assetEntity;
                 if (selectedMedia == null) {
                   return const Center(
                       child: Text(
@@ -60,7 +72,7 @@ class MediaPicker extends StatelessWidget {
                     style: TextStyle(color: Colors.white),
                   ));
                 } else if (selectedMedia.type == AssetType.video) {
-                  final videoController = instaController.videoController;
+                  final videoController = controller.videoController;
                   if (videoController != null &&
                       videoController.value.isInitialized) {
                     return AspectRatio(
@@ -93,10 +105,10 @@ class MediaPicker extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Visibility(
-                    visible: selection == SelectionEnum.MultiMedia,
+                    visible: widget.selection == SelectionEnum.MultiMedia,
                     child: Obx(
                       () => DropdownButton<String>(
-                        value: instaController.mediaType.value,
+                        value: controller.mediaType.value,
                         dropdownColor: Colors.black,
                         underline: Container(),
                         style: const TextStyle(color: Colors.white),
@@ -114,19 +126,19 @@ class MediaPicker extends StatelessWidget {
                         }).toList(),
                         onChanged: (String? newValue) {
                           if (newValue != null) {
-                            instaController.mediaType.value = newValue;
-                            instaController.resetPagination();
-                            instaController.filterData();
+                            controller.mediaType.value = newValue;
+                            controller.resetPagination();
+                            controller.filterData();
                           }
                         },
                       ),
                     ),
                   ),
                   Visibility(
-                    visible: selection != SelectionEnum.MultiMedia,
+                    visible: widget.selection != SelectionEnum.MultiMedia,
                     child: Text(
-                      selection.name[0].toUpperCase() +
-                          selection.name.substring(1),
+                      widget.selection.name[0].toUpperCase() +
+                          widget.selection.name.substring(1),
                       style: const TextStyle(
                           fontWeight: FontWeight.w700,
                           fontSize: 14,
@@ -135,10 +147,10 @@ class MediaPicker extends StatelessWidget {
                   ),
                   const Spacer(),
                   Visibility(
-                    visible: multiSelection,
+                    visible: widget.multiSelection,
                     child: InkWell(
                       onTap: () {
-                        instaController.updateMultiSelect();
+                        controller.updateMultiSelect();
                       },
                       child: const Icon(
                         Icons.select_all,
@@ -148,7 +160,7 @@ class MediaPicker extends StatelessWidget {
                     ),
                   ),
                   Visibility(
-                    visible: cameraEnable,
+                    visible: widget.cameraEnable,
                     child: Padding(
                       padding: const EdgeInsets.only(left: 12.0),
                       child: InkWell(
@@ -156,7 +168,7 @@ class MediaPicker extends StatelessWidget {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => const CameraScreen(),
+                              builder: (context) => const CameraScreenNew(),
                             ),
                           );
                         },
@@ -170,15 +182,15 @@ class MediaPicker extends StatelessWidget {
                   ),
                   Obx(
                     () => Visibility(
-                      visible: instaController.selectedMedia.value != null,
+                      visible: controller.selectedMedia.value != null,
                       child: GestureDetector(
                         onTap: () {
-                          if (instaController.selectedMediaArray.isNotEmpty) {
-                            onPressedConfirm(
-                                value: instaController.selectedMediaArray);
+                          if (controller.selectedMediaArray.isNotEmpty) {
+                            widget.onPressedConfirm(
+                                value: controller.selectedMediaArray);
                           } else {
-                            onPressedConfirm(
-                                value: instaController.selectedMedia.value);
+                            widget.onPressedConfirm(
+                                value: controller.selectedMedia.value);
                           }
                         },
                         child: Container(
@@ -202,16 +214,16 @@ class MediaPicker extends StatelessWidget {
             Expanded(
               flex: 1,
               child: Obx(() {
-                if (instaController.isLoading.value &&
-                    instaController.mediaList.isEmpty) {
+                if (controller.isLoading.value &&
+                    controller.mediaList.isEmpty) {
                   return const Center(child: CircularProgressIndicator());
                 } else {
                   return RawScrollbar(
                       thumbVisibility: true,
                       thumbColor: Colors.red,
-                      controller: instaController.scrollController.value,
+                      controller: controller.scrollController.value,
                       child: GridView.builder(
-                        controller: instaController.scrollController.value,
+                        controller: controller.scrollController.value,
                         gridDelegate:
                             const SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 3,
@@ -219,12 +231,12 @@ class MediaPicker extends StatelessWidget {
                           mainAxisSpacing: 4,
                         ),
                         padding: EdgeInsets.zero,
-                        itemCount: instaController.mediaList.length,
+                        itemCount: controller.mediaList.length,
                         itemBuilder: (context, index) {
-                          final media = instaController.mediaList[index];
+                          final media = controller.mediaList[index];
                           return GestureDetector(
                             onTap: () {
-                              instaController.selectMedia(media);
+                              controller.selectMedia(media);
                             },
                             child: Stack(
                               children: [
@@ -239,7 +251,7 @@ class MediaPicker extends StatelessWidget {
                                     child: Icon(Icons.video_call,
                                         color: Colors.white),
                                   ),
-                                Obx(() => instaController.multiSelect.value
+                                Obx(() => controller.multiSelect.value
                                     ? Positioned(
                                         top: 6,
                                         right: 8,

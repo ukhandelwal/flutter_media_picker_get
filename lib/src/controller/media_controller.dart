@@ -41,9 +41,14 @@ class MediaController extends GetxController {
     }
   }
 
-  Future<void> fetchMedia({bool loadMore = false}) async {
+  Future<void> fetchMedia({bool loadMore = false, bool refresh = false}) async {
     if (isLoading.value || !hasMore) return;
     isLoading.value = true;
+    // if (refresh) {
+    //   currentPage = 0;  // Reset to the first page for a fresh load
+    //   allData.clear();  // Clear existing data
+    //   update();
+    // }
     final List<AssetPathEntity> albums = await PhotoManager.getAssetPathList(
       type: RequestType.all,
       hasAll: true,
@@ -55,9 +60,9 @@ class MediaController extends GetxController {
       );
       if (newMedia.isNotEmpty) {
         final List<MediaItem> items =
-            await Future.wait(newMedia.map((media) async {
+        await Future.wait(newMedia.map((media) async {
           final thumbnail =
-              await media.thumbnailDataWithSize(const ThumbnailSize(200, 200));
+          await media.thumbnailDataWithSize(const ThumbnailSize(200, 200));
           return MediaItem(
               id: media.id,
               type: media.type == AssetType.video
@@ -158,4 +163,8 @@ class MediaController extends GetxController {
   }
 
   void resetPagination() {}
+
+  void refreshData(){
+    fetchMedia(refresh: true);
+  }
 }
