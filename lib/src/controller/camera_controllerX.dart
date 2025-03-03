@@ -10,13 +10,12 @@ class CameraControllerX extends GetxController {
   late CameraController _cameraController;
 
   CameraController get cameraController => _cameraController;
-  CameraDescription? backCamera, frontCamera;
-  RxList<CameraDescription>? cameras;
-  Rx<Future<void>?> initializeControllerFuture = Rx<Future<void>?>(null);
+  RxList<CameraDescription> cameras = <CameraDescription>[].obs;
+  RxBool isLoading = true.obs;
 
   @override
   Future<void> onInit() async {
-    final cameras = await availableCameras();
+    cameras.value = await availableCameras();
     final firstCamera = cameras.first;
     initialize(firstCamera);
     super.onInit();
@@ -25,7 +24,10 @@ class CameraControllerX extends GetxController {
   Future<void> initialize(CameraDescription camera) async {
     _cameraController =
         CameraController(camera, ResolutionPreset.high, enableAudio: false);
-    initializeControllerFuture.value = _cameraController.initialize();
+    _cameraController.initialize().then((onValue) {
+      isLoading(false);
+      update();
+    });
   }
 
   Future<void> captureImage(BuildContext context) async {
@@ -36,7 +38,7 @@ class CameraControllerX extends GetxController {
         if (Get.isRegistered<MediaController>()) {
           Get.find<MediaController>().refreshData();
         }
-        Get.off(value.path);
+        Navigator.pop(context, value.path);
       }
     });
   }
@@ -49,7 +51,7 @@ class CameraControllerX extends GetxController {
 
   void switchCamera() {
     _cameraController.setDescription(
-        cameras![_cameraController.description.name == "0" ? 1 : 0]);
+        cameras[_cameraController.description.name == "0" ? 1 : 0]);
   }
 
   Future<bool> requestPermission() async {

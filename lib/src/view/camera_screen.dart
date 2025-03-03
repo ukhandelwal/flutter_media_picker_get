@@ -18,7 +18,8 @@ class CameraScreenNew extends StatefulWidget {
 }
 
 class _CameraScreenNewState extends State<CameraScreenNew> {
-  final CameraControllerX controller = Get.put(CameraControllerX(), permanent: false);
+  final CameraControllerX controller =
+      Get.put(CameraControllerX(), permanent: false);
 
   @override
   void dispose() {
@@ -28,46 +29,46 @@ class _CameraScreenNewState extends State<CameraScreenNew> {
 
   @override
   Widget build(BuildContext context) {
-    if (controller.initializeControllerFuture.value == null) {
-      return const CircularProgressIndicator();
-    } else {
-      return Scaffold(
-        backgroundColor: Colors.transparent,
-        body: CameraPreview(controller.cameraController),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-        floatingActionButton: Stack(
-          children: [
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: CustomOrientationBuilder(
-                isVideosRecording: false,
-                builder: (context, orientation) {
-                  return FloatingActionButton(
-                    backgroundColor: Colors.orange,
-                    child: const Icon(Icons.camera_alt),
-                    onPressed: () async {
-                      controller.captureImage(context);
+    return Obx(() => controller.isLoading.value == false &&
+            controller.cameraController.value.isInitialized
+        ? Scaffold(
+            backgroundColor: Colors.transparent,
+            body: CameraPreview(controller.cameraController),
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.centerFloat,
+            floatingActionButton: Stack(
+              children: [
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: CustomOrientationBuilder(
+                    isVideosRecording: false,
+                    builder: (context, orientation) {
+                      return FloatingActionButton(
+                        backgroundColor: Colors.orange,
+                        child: const Icon(Icons.camera_alt),
+                        onPressed: () async {
+                          controller.captureImage(context);
+                        },
+                      );
                     },
-                  );
-                },
-              ),
-            ),
-            Align(
-              alignment: Alignment.bottomRight,
-              child: Padding(
-                padding: const EdgeInsets.only(right: 5.0),
-                child: FloatingActionButton(
-                  backgroundColor: Colors.deepOrange,
-                  child: const Icon(Icons.flip_camera_android),
-                  onPressed: () {
-                    controller.switchCamera();
-                  },
+                  ),
                 ),
-              ),
+                Align(
+                  alignment: Alignment.bottomRight,
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 5.0),
+                    child: FloatingActionButton(
+                      backgroundColor: Colors.deepOrange,
+                      child: const Icon(Icons.flip_camera_android),
+                      onPressed: () {
+                        controller.switchCamera();
+                      },
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
-      );
-    }
+          )
+        : const CircularProgressIndicator());
   }
 }
