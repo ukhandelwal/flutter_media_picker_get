@@ -1,4 +1,4 @@
-# Flutter Media Picker Get
+# Flutter Media Picker Getx
 
 A Flutter package that provides a customizable and easy-to-use media picker, allowing users to select multiple images or videos with support for camera integration.
 
