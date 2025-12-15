@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get/get_rx/get_rx.dart';
 import 'package:photo_manager/photo_manager.dart';
@@ -23,6 +24,7 @@ class MediaController extends GetxController {
 
   @override
   void onInit() {
+    lockOrientation();
     scrollController.value.addListener(_onScroll);
     requestPermissions();
     super.onInit();
@@ -44,11 +46,11 @@ class MediaController extends GetxController {
   Future<void> fetchMedia({bool loadMore = false, bool refresh = false}) async {
     if (isLoading.value || !hasMore) return;
     isLoading.value = true;
-    // if (refresh) {
-    //   currentPage = 0;  // Reset to the first page for a fresh load
-    //   allData.clear();  // Clear existing data
-    //   update();
-    // }
+    if (refresh) {
+      currentPage = 0;  // Reset to the first page for a fresh load
+      allData.clear();  // Clear existing data
+      // update();
+    }
     final List<AssetPathEntity> albums = await PhotoManager.getAssetPathList(
       type: RequestType.all,
       hasAll: true,
@@ -60,9 +62,9 @@ class MediaController extends GetxController {
       );
       if (newMedia.isNotEmpty) {
         final List<MediaItem> items =
-        await Future.wait(newMedia.map((media) async {
+            await Future.wait(newMedia.map((media) async {
           final thumbnail =
-          await media.thumbnailDataWithSize(const ThumbnailSize(200, 200));
+              await media.thumbnailDataWithSize(const ThumbnailSize(200, 200));
           return MediaItem(
               id: media.id,
               type: media.type == AssetType.video
@@ -133,6 +135,7 @@ class MediaController extends GetxController {
 
   @override
   void dispose() {
+    removeLockOrientation();
     _disposeVideoController();
     scrollController.value.dispose();
     super.dispose();
@@ -164,7 +167,23 @@ class MediaController extends GetxController {
 
   void resetPagination() {}
 
-  void refreshData(){
+  void refreshData() {
     fetchMedia(refresh: true);
+  }
+
+  void lockOrientation() {
+    // SystemChrome.setPreferredOrientations([
+    //   DeviceOrientation.portraitUp,
+    //   DeviceOrientation.portraitDown,
+    // ]);
+  }
+
+  void removeLockOrientation() {
+    // SystemChrome.setPreferredOrientations([
+    //   DeviceOrientation.landscapeRight,
+    //   DeviceOrientation.landscapeLeft,
+    //   DeviceOrientation.portraitUp,
+    //   DeviceOrientation.portraitDown,
+    // ]);
   }
 }

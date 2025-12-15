@@ -8,6 +8,7 @@ import 'package:video_player/video_player.dart';
 
 import '../../flutter_media_picker_getx.dart';
 import '../controller/media_controller.dart';
+import 'demo.dart';
 
 class MediaPicker extends StatefulWidget {
   final int mediaCount;
@@ -29,14 +30,14 @@ class MediaPicker extends StatefulWidget {
 }
 
 class _MediaPickerState extends State<MediaPicker> {
-  final MediaController controller =
-      Get.put(MediaController(), permanent: false);
+  final MediaController controller = Get.put(MediaController(), permanent: false);
 
   @override
   void dispose() {
     controller.dispose();
-    controller.videoController?.dispose();
-    controller.scrollController.value.dispose();();
+    if (Get.isRegistered<MediaController>()) {
+      Get.delete<MediaController>();
+    }
     super.dispose();
   }
 
@@ -168,7 +169,7 @@ class _MediaPickerState extends State<MediaPicker> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => const CameraScreenNew(),
+                              builder: (context) =>  CameraScreenNew(),
                             ),
                           );
                         },

@@ -1,5 +1,6 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:gallery_saver_plus/gallery_saver.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -15,16 +16,18 @@ class CameraControllerX extends GetxController {
 
   @override
   Future<void> onInit() async {
-    cameras.value = await availableCameras();
-    final firstCamera = cameras.first;
-    initialize(firstCamera);
     super.onInit();
+    bool permission = await requestCameraPermission();
+    if(permission){
+      cameras.value = await availableCameras();
+      final firstCamera = cameras.first;
+      initialize(firstCamera);
+    }
   }
 
   Future<void> initialize(CameraDescription camera) async {
-    _cameraController =
-        CameraController(camera, ResolutionPreset.high, enableAudio: false);
-    _cameraController.initialize().then((onValue) {
+    _cameraController = CameraController(camera, ResolutionPreset.high, enableAudio: false);
+    _cameraController.initialize().then((onValue) async {
       isLoading(false);
       update();
     });
@@ -57,6 +60,15 @@ class CameraControllerX extends GetxController {
   Future<bool> requestPermission() async {
     if (await Permission.photos.request().isGranted ||
         await Permission.storage.request().isGranted) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  Future<bool> requestCameraPermission() async {
+    var status = await Permission.camera.request();
+    if (status.isGranted) {
       return true;
     } else {
       return false;

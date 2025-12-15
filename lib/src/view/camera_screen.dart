@@ -23,7 +23,11 @@ class _CameraScreenNewState extends State<CameraScreenNew> {
 
   @override
   void dispose() {
+    controller.cameraController.dispose();
     controller.dispose();
+    if (Get.isRegistered<CameraControllerX>()) {
+      Get.delete<CameraControllerX>();
+    }
     super.dispose();
   }
 
@@ -34,8 +38,7 @@ class _CameraScreenNewState extends State<CameraScreenNew> {
         ? Scaffold(
             backgroundColor: Colors.transparent,
             body: CameraPreview(controller.cameraController),
-            floatingActionButtonLocation:
-                FloatingActionButtonLocation.centerFloat,
+            floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
             floatingActionButton: Stack(
               children: [
                 Align(
