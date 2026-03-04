@@ -8,22 +8,39 @@ import 'package:video_player/video_player.dart';
 
 import '../../flutter_media_picker_getx.dart';
 import '../controller/media_controller.dart';
-import 'demo.dart';
 
+/// A customizable media picker widget that supports single and multi-selection
+/// of images and videos.
 class MediaPicker extends StatefulWidget {
+  /// The maximum number of media items that can be selected.
   final int mediaCount;
+  
+  /// Whether to enable camera access within the picker.
   final bool cameraEnable;
+  
+  /// Whether to allow selecting multiple media items at once.
   final bool multiSelection;
+  
+  /// The specific type of media to filter for (Images, Videos, or MultiMedia).
   final SelectionEnum selection;
+  
+  /// Callback function triggered when the user confirms their selection.
+  /// Returns either a [MediaItem] or a [List<MediaItem>].
   final void Function({required dynamic value}) onPressedConfirm;
 
-  const MediaPicker(
-      {super.key,
-      this.mediaCount = 10,
-      this.cameraEnable = false,
-      this.multiSelection = false,
-      this.selection = SelectionEnum.Images,
-      required this.onPressedConfirm});
+  /// Optional custom title for the picker's AppBar.
+  final String? title;
+
+  /// Creates a [MediaPicker].
+  const MediaPicker({
+    super.key,
+    this.mediaCount = 10,
+    this.cameraEnable = false,
+    this.multiSelection = false,
+    this.selection = SelectionEnum.Images,
+    required this.onPressedConfirm,
+    this.title,
+  });
 
   @override
   State<MediaPicker> createState() => _MediaPickerState();
@@ -57,7 +74,9 @@ class _MediaPickerState extends State<MediaPicker> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      appBar: AppBar(title: Text('${widget.selection.name} Picker'), actions: [
+      appBar: AppBar(
+          title: Text(widget.title ?? '${widget.selection.name} Picker'),
+          actions: [
         Obx(
           () => Visibility(
             visible: controller.multiSelect.value,

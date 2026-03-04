@@ -8,6 +8,7 @@ import 'package:video_player/video_player.dart';
 
 import '../model/media_item.dart';
 
+/// Controller for managing media fetching, selection, and pagination.
 class MediaController extends GetxController {
   Rx<ScrollController> scrollController = ScrollController().obs;
   RxString mediaType = "images".obs;
@@ -44,11 +45,13 @@ class MediaController extends GetxController {
   }
 
   Future<void> fetchMedia({bool loadMore = false, bool refresh = false}) async {
-    if (isLoading.value || !hasMore) return;
+    if (isLoading.value || (!hasMore && !refresh)) return;
     isLoading.value = true;
     if (refresh) {
       currentPage = 0;  // Reset to the first page for a fresh load
+      hasMore = true;   // Reset hasMore for fresh fetch
       allData.clear();  // Clear existing data
+      mediaList.clear(); // Clear filtered data to show loading state
       // update();
     }
     RequestType type;
@@ -63,6 +66,14 @@ class MediaController extends GetxController {
     final List<AssetPathEntity> albums = await PhotoManager.getAssetPathList(
       type: type,
       hasAll: true,
+      filterOption: FilterOptionGroup(
+        orders: [
+          const OrderOption(
+            type: OrderOptionType.createDate,
+            asc: false,
+          ),
+        ],
+      ),
     );
     if (albums.isNotEmpty) {
       final newMedia = await albums[0].getAssetListPaged(

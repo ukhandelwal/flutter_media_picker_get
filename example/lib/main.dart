@@ -58,6 +58,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               selection: SelectionEnum.MultiMedia,
                               multiSelection: true,
                               cameraEnable: true,
+                              title: "Media Picker",
                               onPressedConfirm: myCallback,
                             )),
                   );

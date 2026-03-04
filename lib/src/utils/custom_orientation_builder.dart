@@ -4,12 +4,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sensors_plus/sensors_plus.dart';
 
+/// A builder widget that provides the current device orientation based on accelerometer data.
 class CustomOrientationBuilder extends StatefulWidget {
+  /// Constructor for [CustomOrientationBuilder].
   const CustomOrientationBuilder({required this.builder, required this.isVideosRecording, super.key});
-  /// this is a builder function which will provide a context and as well as a orientation (enum)
+  
+  /// A builder function which provides a context and a [CustomOrientation].
   final Widget Function(BuildContext, CustomOrientation) builder;
-  /// this is a flag on which the builder widget will able to know if the video recording is going on?
-  /// if the recording is running, then the change of orientation won't be recognized. I made this logic from my own. You can make your own
+  
+  /// A flag indicating if video recording is active.
+  /// If true, orientation changes will not be recognized.
   final bool isVideosRecording;
   @override
   State<CustomOrientationBuilder> createState() => _CustomOrientationBuilderState();
@@ -68,5 +72,14 @@ class _CustomOrientationBuilderState extends State<CustomOrientationBuilder> {
   }
 }
 
-/// orientation enums
-enum CustomOrientation {portrait, leftLandScape, rightLandScape}
+/// Represents the possible orientations for the camera interface.
+enum CustomOrientation {
+  /// Vertical orientation.
+  portrait, 
+  
+  /// Landscape orientation with the top of the device to the left.
+  leftLandScape, 
+  
+  /// Landscape orientation with the top of the device to the right.
+  rightLandScape
+}

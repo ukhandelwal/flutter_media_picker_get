@@ -7,9 +7,10 @@ import 'package:gallery_saver_plus/gallery_saver.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-import '../controller/camera_controllerX.dart';
-import '../utils/CustomOrientationBuilder.dart';
+import '../controller/camera_controller_x.dart';
+import '../utils/custom_orientation_builder.dart';
 
+/// A screen that provides a camera interface for capturing new media.
 class CameraScreenNew extends StatefulWidget {
   const CameraScreenNew({super.key});
 
@@ -72,6 +73,6 @@ class _CameraScreenNewState extends State<CameraScreenNew> {
               ],
             ),
           )
-        : const CircularProgressIndicator());
+        : Center(child: CircularProgressIndicator()));
   }
 }

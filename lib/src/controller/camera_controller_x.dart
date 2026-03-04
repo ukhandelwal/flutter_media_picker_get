@@ -4,9 +4,11 @@ import 'package:flutter/services.dart';
 import 'package:gallery_saver_plus/gallery_saver.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:photo_manager/photo_manager.dart';
 
 import 'media_controller.dart';
 
+/// Controller for managing camera initialization and capture logic.
 class CameraControllerX extends GetxController {
   late CameraController _cameraController;
 
@@ -34,16 +36,29 @@ class CameraControllerX extends GetxController {
   }
 
   Future<void> captureImage(BuildContext context) async {
-    await _cameraController.takePicture().then((value) async {
+    try {
+      final XFile file = await _cameraController.takePicture();
       bool permission = await requestPermission();
       if (permission) {
-        await GallerySaver.saveImage(value.path);
+        await GallerySaver.saveImage(file.path);
+        
+        // Give the OS a moment to index the new file in the MediaStore
+        await Future.delayed(const Duration(milliseconds: 1000));
+        
         if (Get.isRegistered<MediaController>()) {
-          Get.find<MediaController>().refreshData();
+          final mediaController = Get.find<MediaController>();
+          // Clear photo_manager cache to ensure it sees the new file
+          await PhotoManager.clearFileCache();
+          await mediaController.fetchMedia(refresh: true);
         }
-        Navigator.pop(context, value.path);
+        
+        if (context.mounted) {
+          Navigator.pop(context, file.path);
+        }
       }
-    });
+    } catch (e) {
+      debugPrint("Error capturing image: $e");
+    }
   }
 
   @override
