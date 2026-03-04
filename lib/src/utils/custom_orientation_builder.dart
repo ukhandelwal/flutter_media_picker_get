@@ -35,7 +35,7 @@ class _CustomOrientationBuilderState extends State<CustomOrientationBuilder> {
 
   orientation(){
     try {
-      accelerometerSubscription = accelerometerEvents.listen((AccelerometerEvent event) {
+      accelerometerSubscription = accelerometerEventStream().listen((AccelerometerEvent event) {
         if(!widget.isVideosRecording){
           setState(() {
             if (event.z < -8.0) {
@@ -60,8 +60,7 @@ class _CustomOrientationBuilderState extends State<CustomOrientationBuilder> {
 
 
       });
-    } on PlatformException catch (e) {
-      print("Error: $e");
+    } on PlatformException catch (_) {
     }
   }
   @override

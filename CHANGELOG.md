@@ -1,4 +1,4 @@
-## 1.0.1
+## 1.0.0
 
 * **New Features**:
     * Added `title` parameter to `MediaPicker` for custom AppBar titles.

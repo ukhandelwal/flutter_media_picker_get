@@ -1,11 +1,7 @@
-import 'dart:io';
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_media_picker_getx/src/controller/media_controller.dart';
-import 'package:gallery_saver_plus/gallery_saver.dart';
 import 'package:get/get.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 import '../controller/camera_controller_x.dart';
 import '../utils/custom_orientation_builder.dart';
@@ -73,6 +69,6 @@ class _CameraScreenNewState extends State<CameraScreenNew> {
               ],
             ),
           )
-        : Center(child: CircularProgressIndicator()));
+        : const Center(child: CircularProgressIndicator()));
   }
 }

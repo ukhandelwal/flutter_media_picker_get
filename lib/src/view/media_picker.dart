@@ -202,7 +202,7 @@ class _MediaPickerState extends State<MediaPicker> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) =>  CameraScreenNew(),
+                              builder: (context) =>  const CameraScreenNew(),
                             ),
                           );
                         },

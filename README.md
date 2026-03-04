@@ -18,7 +18,7 @@ Add the following dependency in your `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  flutter_media_picker_getx: ^1.0.1
+  flutter_media_picker_getx: ^1.0.0
 ```
 
 ## Android Permissions
