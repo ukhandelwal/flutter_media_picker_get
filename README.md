@@ -4,10 +4,13 @@ A Flutter package that provides a customizable and easy-to-use media picker, all
 
 ## Features
 
-- Multi-media selection (Images and Videos)
-- Single or multiple selection support
-- Camera integration
-- Customizable media count limit
+- **Multi-media selection**: Choose between Images, Videos, or both.
+- **Dynamic Sorting**: Media is automatically sorted by creation date (newest first).
+- **Instant Refresh**: Photos captured via the internal camera appear instantly in the gallery.
+- **Customizable UI**: Set a custom title for the picker's AppBar.
+- **Single or Multiple Selection**: Supports both single-item picking and multi-select modes.
+- **Camera Integration**: Capture new photos directly within the picker.
+- **Pagination support**: Smoothly handles large galleries using efficient pagination.
 
 ## Installation
 
@@ -15,10 +18,13 @@ Add the following dependency in your `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  flutter_media_picker_get: ^0.0.6
+  flutter_media_picker_getx: ^1.0.1
 ```
+
 ## Android Permissions
-```yaml
+Ensure you have the following permissions in your `AndroidManifest.xml`:
+
+```xml
 <uses-feature
     android:name="android.hardware.camera"
     android:required="false" />
@@ -28,9 +34,6 @@ dependencies:
     android:maxSdkVersion="29"
     tools:replace="android:maxSdkVersion" />
 <uses-permission android:name="android.permission.INTERNET" />
-<uses-permission
-    android:name="android.permission.WRITE_EXTERNAL_STORAGE"
-    android:maxSdkVersion="29" />
     
 <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
 <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
@@ -38,19 +41,16 @@ dependencies:
 <uses-permission android:name="android.permission.CAMERA" />
 
 <application
-android:name="${applicationName}"
-android:icon="@mipmap/ic_launcher"
-android:enableOnBackInvokedCallback="true"
-android:label="example"
-android:requestLegacyExternalStorage="true"
-android:usesCleartextTraffic="true">
-/>
+    android:requestLegacyExternalStorage="true"
+    android:usesCleartextTraffic="true">
+</application>
 ```
+
 ## iOS Permissions
 
-- Open Info.plist in your Flutter project, located at ios/Runner/Info.plist.
-- Add the following keys for camera and photo library access. These keys provide descriptions that explain to users why your app requires these permissions:
-```yaml
+Open `Info.plist` and add the following keys for camera and photo library access:
+
+```xml
 <key>NSCameraUsageDescription</key>
 <string>We need access to your camera to allow you to capture photos and videos.</string>
 
@@ -63,103 +63,59 @@ android:usesCleartextTraffic="true">
 
 ## Usage
 
-To use the media picker, follow these steps:
-- Import the package
-```yaml
-  import 'package:flutter_media_picker_get/flutter_media_picker_get.dart';
+### 1. Import the package
+```dart
+import 'package:flutter_media_picker_getx/flutter_media_picker_getx.dart';
 ```
-- Use the MediaPicker widget to open the media picker
-```yaml
+
+### 2. Launch the MediaPicker
+```dart
 ElevatedButton(
   onPressed: () {
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => MediaPicker(
-          mediaCount: 10,
-          selection: SelectionEnum.MultiMedia,
-          multiSelection: true,
-          cameraEnable: true,
+          title: "Select Media",      // Optional custom title
+          mediaCount: 10,             // Max items to select
+          selection: SelectionEnum.MultiMedia, // Image/Video/Multi
+          multiSelection: true,       // Allow multiple
+          cameraEnable: true,         // Enable camera capture
           onPressedConfirm: myCallback,
         ),
       ),
     );
   },
-  child: Text("Picker"),
+  child: Text("Open Picker"),
 );
+```
+
+### 3. Handle the Callback
+```dart
+Future<void> myCallback({required dynamic value}) async {
+  if (value is List<MediaItem>) {
+    for (var media in value) {
+      final file = await media.assetEntity.file;
+      print("Selected file (${media.type}): ${file?.path}");
+    }
+  } else if (value is MediaItem) {
+    final file = await value.assetEntity.file;
+    print("Selected file (${value.type}): ${file?.path}");
+  }
+}
 ```
 
 ## Parameters
 
-- mediaCount: Maximum number of items that can be selected.
-- selection: Selection type. Use SelectionEnum.MultiMedia for images and videos.
-- multiSelection: Boolean to allow multiple media selection.
-- cameraEnable: Boolean to enable camera access within the picker.
-- onPressedConfirm: Callback function triggered when the user confirms selection.
+| Parameter | Type | Description |
+| :--- | :--- | :--- |
+| `title` | `String?` | Optional custom title for the AppBar. |
+| `mediaCount` | `int` | Maximum number of items allowed for selection (Default: 10). |
+| `selection` | `SelectionEnum` | Filter media type: `Images`, `Videos`, or `MultiMedia`. |
+| `multiSelection` | `bool` | Enables multi-select mode (Default: false). |
+| `cameraEnable` | `bool` | Shows camera icon to capture new media (Default: false). |
+| `onPressedConfirm` | `Function` | Callback returning the selected `MediaItem` or `List<MediaItem>`. |
 
-## Example
-```yaml
-import 'package:flutter/material.dart';
-import 'package:flutter_media_picker_get/flutter_media_picker_get.dart';
+## Example Project
 
-void main() => runApp(MyApp());
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: HomeScreen(),
-    );
-  }
-}
-
-class HomeScreen extends StatelessWidget {
-  Future<void> myCallback({required dynamic value}) async {
-    if (value is List<MediaItem>) {
-      for (var media in value) {
-        if (media.type == MediaType.image) {
-          final file = await media.assetEntity.file;
-          if (file != null) {
-            if (kDebugMode) {
-              print("file $file");
-            }
-          }
-        }
-      }
-    } else {
-      if (value is MediaItem) {
-        final file = await value.assetEntity.file;
-        if (kDebugMode) {
-          print("file $file");
-        }
-      }
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text("Media Picker Example")),
-      body: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => MediaPicker(
-                  mediaCount: 10,
-                  selection: SelectionEnum.MultiMedia,
-                  multiSelection: true,
-                  cameraEnable: true,
-                  onPressedConfirm: myCallback,
-                ),
-              ),
-            );
-          },
-          child: Text("Open Media Picker"),
-        ),
-      ),
-    );
-  }
-}
-```
+Check the `example` folder for a complete implementation demonstrating single and multi-select flows.
