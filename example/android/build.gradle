@@ -8,6 +8,24 @@ allprojects {
 rootProject.buildDir = "../build"
 subprojects {
     project.buildDir = "${rootProject.buildDir}/${project.name}"
+    project.configurations.all {
+        resolutionStrategy.eachDependency { details ->
+            if (details.requested.group == 'androidx.concurrent' && details.requested.name == 'concurrent-futures') {
+                details.useVersion '1.2.0'
+            }
+            if (details.requested.group == 'androidx.annotation' && details.requested.name == 'annotation') {
+                details.useVersion '1.8.0'
+            }
+        }
+    }
+    afterEvaluate { project ->
+        if (project.plugins.hasPlugin('com.android.library') || project.plugins.hasPlugin('com.android.application')) {
+            project.dependencies {
+                implementation "androidx.concurrent:concurrent-futures:1.2.0"
+                implementation "androidx.annotation:annotation:1.8.0"
+            }
+        }
+    }
 }
 subprojects {
     project.evaluationDependsOn(":app")

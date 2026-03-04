@@ -51,8 +51,17 @@ class MediaController extends GetxController {
       allData.clear();  // Clear existing data
       // update();
     }
+    RequestType type;
+    if (mediaType.value == 'images') {
+      type = RequestType.image;
+    } else if (mediaType.value == 'videos') {
+      type = RequestType.video;
+    } else {
+      type = RequestType.common;
+    }
+
     final List<AssetPathEntity> albums = await PhotoManager.getAssetPathList(
-      type: RequestType.all,
+      type: type,
       hasAll: true,
     );
     if (albums.isNotEmpty) {
@@ -61,8 +70,9 @@ class MediaController extends GetxController {
         size: pageSize,
       );
       if (newMedia.isNotEmpty) {
-        final List<MediaItem> items =
-            await Future.wait(newMedia.map((media) async {
+        final List<MediaItem> items = await Future.wait(newMedia
+            .where((m) => m.type == AssetType.image || m.type == AssetType.video)
+            .map((media) async {
           final thumbnail =
               await media.thumbnailDataWithSize(const ThumbnailSize(200, 200));
           return MediaItem(
@@ -98,7 +108,7 @@ class MediaController extends GetxController {
         media.isSelected = true;
         selectedMediaArray.add(media);
       }
-      if (media.type == MediaType.video && selectedMediaArray.length < 2) {
+      if (media.type == MediaType.video) {
         _playVideo(media.assetEntity);
       } else {
         _disposeVideoController();
@@ -110,13 +120,19 @@ class MediaController extends GetxController {
   }
 
   Future<void> _playVideo(AssetEntity asset) async {
+    _disposeVideoController();
+    selectedMedia.refresh(); // Show loading indicator immediately
     final file = await asset.file;
     if (file != null) {
-      videoController = VideoPlayerController.file(file)
-        ..initialize().then((_) {
-          videoController!.play();
-          update();
-        });
+      videoController = VideoPlayerController.file(file);
+      try {
+        await videoController!.initialize();
+        videoController!.setLooping(true);
+        videoController!.play();
+        selectedMedia.refresh(); // Trigger Obx in the view
+      } catch (e) {
+        debugPrint("Error initializing video: $e");
+      }
     }
   }
 
@@ -165,7 +181,13 @@ class MediaController extends GetxController {
     }
   }
 
-  void resetPagination() {}
+  void resetPagination() {
+    currentPage = 0;
+    hasMore = true;
+    allData.clear();
+    mediaList.clear();
+    fetchMedia();
+  }
 
   void refreshData() {
     fetchMedia(refresh: true);

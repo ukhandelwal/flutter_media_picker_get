@@ -33,6 +33,18 @@ class _MediaPickerState extends State<MediaPicker> {
   final MediaController controller = Get.put(MediaController(), permanent: false);
 
   @override
+  void initState() {
+    super.initState();
+    if (widget.selection == SelectionEnum.Images) {
+      controller.mediaType.value = 'images';
+    } else if (widget.selection == SelectionEnum.Videos) {
+      controller.mediaType.value = 'videos';
+    } else {
+      controller.mediaType.value = 'all';
+    }
+  }
+
+  @override
   void dispose() {
     controller.dispose();
     if (Get.isRegistered<MediaController>()) {
@@ -113,16 +125,18 @@ class _MediaPickerState extends State<MediaPicker> {
                         dropdownColor: Colors.black,
                         underline: Container(),
                         style: const TextStyle(color: Colors.white),
-                        items: <String>['images', 'videos'].map((String value) {
+                        items: <String>['all', 'images', 'videos'].map((String value) {
                           return DropdownMenuItem<String>(
                             value: value.toLowerCase(),
                             child: Text(
-                              value[0].toUpperCase() + value.substring(1),
+                              value == 'all'
+                                  ? 'All'
+                                  : value[0].toUpperCase() + value.substring(1),
                               style: const TextStyle(
                                   fontWeight: FontWeight.w700,
                                   fontSize: 14,
                                   color: Colors.white),
-                            ), // Display as "Image" or "Video"
+                            ), // Display as "All", "Images" or "Videos"
                           );
                         }).toList(),
                         onChanged: (String? newValue) {

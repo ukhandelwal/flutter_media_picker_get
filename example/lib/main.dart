@@ -70,23 +70,28 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<void> myCallback({required dynamic value}) async {
-    if (value is List<MediaItem>) {
-      for (var media in value) {
-        if (media.type == MediaType.image) {
+    try {
+      print("myCallbackFile $value");
+      if (value is List<MediaItem>) {
+        for (var media in value) {
           final file = await media.assetEntity.file;
           if (file != null) {
             if (kDebugMode) {
-              print("file $file");
+              print("file (${media.type}): $file");
             }
           }
         }
-      }
-    } else {
-      if (value is MediaItem) {
-        final file = await value.assetEntity.file;
-        if (kDebugMode) {
-          print("file $file");
+      } else {
+        if (value is MediaItem) {
+          final file = await value.assetEntity.file;
+          if (kDebugMode) {
+            print("file $file");
+          }
         }
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print("myCallbackFileError: $e");
       }
     }
   }
